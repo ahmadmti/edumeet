@@ -506,7 +506,7 @@ const Peer = (props) =>
 						</Tooltip>
 						}
 
-						{ browser.platform !== 'mobile' &&
+						{/* { browser.platform !== 'mobile' &&
 							videoVisible && windowConsumer !== webcamConsumer.id &&
 							<Tooltip
 								title={intl.formatMessage({
@@ -533,7 +533,7 @@ const Peer = (props) =>
 									</Fab>
 								</div>
 							</Tooltip>
-						}
+						} */}
 
 						{ videoVisible &&
 							<Tooltip
