@@ -801,14 +801,17 @@ const Me = (props) =>
 								{/* /Hide self view */}
 								{/* settings  */}
 								<Tooltip
-									title={webcamTip}
+									title={intl.formatMessage({
+										id             : 'device.settings',
+										defaultMessage : 'Open settings'
+									})}
 									placement={height <= 190 ? 'bottom' : 'left'}
 								>
 									<div>
 										<Fab
 											aria-label={intl.formatMessage({
-												id             : 'device.startVideo',
-												defaultMessage : 'Start video'
+												id             : 'device.settings',
+												defaultMessage : 'Open settings'
 											})}
 											style={{ ...controls.item.style }}
 											className={classnames('fab')}

@@ -189,7 +189,7 @@ class Room extends React.PureComponent
 
 		return (
 			<div className={classes.root}>
-				{ !isElectron() &&
+				{/* { !isElectron() &&
 					<CookieConsent
 						buttonText={
 							<FormattedMessage
@@ -203,7 +203,7 @@ class Room extends React.PureComponent
 							defaultMessage='This website uses cookies to enhance the user experience'
 						/>
 					</CookieConsent>
-				}
+				} */}
 
 				<FullScreenView advancedMode={advancedMode} />
 
