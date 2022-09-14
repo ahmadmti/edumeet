@@ -532,15 +532,20 @@ class VideoView extends React.PureComponent
 				// eslint-disable-next-line react/no-did-mount-set-state
 			}
 			else if (this.props.IsValid
-					&& dayjs(this.props.IsValid.end).diff(dayjs(), 'seconds') == 30)
+					&& dayjs(this.props.IsValid.end).diff(dayjs(), 'seconds') <= 30)
 			{
-				this.setState((prevState) =>
+
+				if (!this.state.count)
 				{
-					return {
-						...prevState,
-						count : true
-					};
-				});
+
+					this.setState((prevState) =>
+					{
+						return {
+							...prevState,
+							count : true
+						};
+					});
+				}
 			}
 		}, 1000);
 

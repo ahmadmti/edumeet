@@ -1,0 +1,106 @@
+name: Debian package
+
+on: 
+  push:
+    branches: [ master ]
+#  pull_request:
+#    branches: [ develop ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    env:
+      CI: false
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+          path: edumeet
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        
+    - name: Get eduMEET version
+      id: get-version
+      run: |
+        echo "::set-output name=VERSION::$(cat edumeet/server/package.json | jq -r '.version')"
+        
+    - name: Build Debian package
+      id: build-deb
+      run: |
+        cd edumeet
+        cp server/config/config.example.js server/config/config.js
+        cp server/config/config.example.yaml server/config/config.yaml
+        cp app/public/config/config.example.js app/public/config/config.js
+        cd app
+        yarn install && yarn build
+        cd ../server
+        yarn install && yarn build
+        cat <<< $(jq '.bundleDependencies += .dependencies' package.json) > package.json
+        npm pack
+        VERSION=${{ steps.get-version.outputs.VERSION }}
+        DATE=$(date)
+        mkdir -p /home/runner/package
+        cd /home/runner/package
+        mkdir DEBIAN
+        mkdir -p usr/local/src/edumeet/server
+        mkdir -p etc/systemd/system/
+        tar -xf /home/runner/work/***/***/***/server/***-server-$VERSION.tgz package/ 1>/dev/null 2>/dev/null || true
+        mv package/* usr/local/src/edumeet/server/
+        mv /home/runner/work/***/***/***/*.service etc/systemd/system/
+        rm -rf package
+        touch DEBIAN/md5sums
+        touch DEBIAN/md5sums
+        touch DEBIAN/control
+        #find . -type f ! -regex '.*.hg.*' ! -regex '.*?debian-binary.*' ! -regex '.*?DEBIAN.*' -printf '%P ' | xargs md5sum  1>/dev/null 2>/dev/null || true
+        #
+        cat > DEBIAN/control <<EOF
+        Package: edumeet
+        Version: $VERSION
+        Maintainer: eduMEET team (${{ github.server_url }}/${{ github.repository }})
+        Section: admin
+        Date : $DATE
+        Architecture: amd64
+        Priority: optional
+        Description: eduMMET is multiparty web-meetings based on mediasoup and WebRTC
+          Packet created from ${{ github.ref_name }} branch, commit:${{ github.sha }}
+          Visit ${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }} for details
+        Depends: nodejs (>= 16), redis
+        EOF
+        #
+        cat > DEBIAN/postinst <<EOF
+        #!/bin/bash
+        mkdir -p /etc/edumeet/
+        ln -s /usr/local/src/edumeet/server/config/config.js /etc/edumeet/server-config.js || true
+        ln -s /usr/local/src/edumeet/server/dist/config/config.yaml /etc/edumeet/server-config.yaml || true
+        ln -s /usr/local/src/edumeet/server/public/config/config.js /etc/edumeet/client-config.js || true
+        systemctl daemon-reload
+        systemctl enable edumeet
+        echo "eduMEET multiparty meeting is installed.\n"
+        echo "\n\nClient and server configuration files are in /etc/edumeet directory\n"
+        echo "Please visit ${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }} for configuration details.\n\n"
+        echo "\n\nAfter configuration, start service with 'sudo systemctl start edumeet' command.\n\n"
+        EOF
+        #
+        chmod 775 DEBIAN/postinst
+        cd ../
+        dpkg-deb -Zgzip --build package
+        mv /home/runner/package.deb /home/runner/edumeet-$VERSION.deb
+        
+    - name : Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: edumeet-${{ steps.get-version.outputs.VERSION }}
+        path: "/home/runner/edumeet-*.deb"
+    
+    - name: Add to release assets
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.get-version.outputs.VERSION }}
+        files: "/home/runner/edumeet-*.deb"

@@ -1,0 +1,12 @@
+frontend:
+    1 - VideoView.js   src/components/videoContainers
+    2 - roomActions.js src/store/actions
+    3 - room.js        src/store/reducers 
+backend:
+run below command before running the backend:
+    $ knex migrate:latest 
+
+Followings are the changes: 
+    1 - roomCheck.js server/lib/roomCheck.js
+    2 - server.js /server/server.js   726-856
+    3 - migrations /server/migration 
