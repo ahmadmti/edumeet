@@ -10,3 +10,15 @@ Followings are the changes:
     1 - roomCheck.js server/lib/roomCheck.js
     2 - server.js /server/server.js   726-856
     3 - migrations /server/migration 
+
+
+
+changelog 19-09-022:
+    frontend:   
+        1 - VideoView.js  // just changed the time type from date Time to epoch (seconds)
+    backend:
+        1 - changed the start-end column datatype from Timestamps to bigInteger
+                0 - npm install -g knex in "/src/server/"
+                1 - run knex migrate:rollback
+                2- run knex migrate:latest 
+        2 - roomCheck.js // just change the time type from date to epoch(seconds)
