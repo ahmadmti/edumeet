@@ -19,7 +19,7 @@ var config = {
 	productionPort : 443,
 
 	// If the server component runs on a different host than the app you can specify the host name.
-	serverHostname : '172.17.0.4',
+	serverHostname : '172.17.0.2',
 
 	// Supported browsers version in bowser satisfy format.
 	supportedBrowsers : {

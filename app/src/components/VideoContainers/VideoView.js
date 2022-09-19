@@ -470,7 +470,7 @@ class VideoView extends React.PureComponent
 				</div>
 				{
 					this.state.count &&
-					<div style={{ position: 'absolute', zIndex: 100 }}>	<Counter options={{ endDate: new Date(IsValid.end), cb }}/> </div>
+					<div style={{ position: 'absolute', zIndex: 100 }}>	<Counter options={{ endDate: dayjs.unix(IsValid.end), cb }}/> </div>
 
 				}
 
@@ -532,7 +532,7 @@ class VideoView extends React.PureComponent
 				// eslint-disable-next-line react/no-did-mount-set-state
 			}
 			else if (this.props.IsValid
-					&& dayjs(this.props.IsValid.end).diff(dayjs(), 'seconds') <= 30)
+					&& dayjs.unix(this.props.IsValid.end).diff(dayjs(), 'seconds') <= 30)
 			{
 
 				if (!this.state.count)

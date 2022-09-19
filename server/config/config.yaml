@@ -1,5 +1,5 @@
 listeningPort: 4000
-listeningHost: 172.17.0.4
+listeningHost: 172.17.0.2
 
 fileTracker: "wss://tracker.openwebtorrent.com"
 
@@ -17,7 +17,7 @@ backupTurnServers:
     credential: "muazkh"
 
 redisOptions:
-  host: "172.17.0.3"
+  host: "172.17.0.4"
   port: "6379"
   password: "12345678"
 
@@ -30,5 +30,5 @@ prometheus:
 mediasoup:
   webRtcTransport:
     listenIps:
-      - ip: "172.17.0.4"
+      - ip: "172.17.0.2"
         announcedIp: null

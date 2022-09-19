@@ -12,8 +12,8 @@ module.exports = {
             let status = 'valid';
             const room = await knex("room").where("Id",roomId);
             console.log("Validating Room",room);
-            const startTime = dayjs(room[0].start)
-            const endTime = dayjs(room[0].end)
+            const startTime = dayjs.unix(room[0].start)
+            const endTime = dayjs.unix(room[0].end)
             const currentTime = dayjs();
             console.log("start",startTime);
             console.log("end",endTime);
