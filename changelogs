@@ -22,3 +22,8 @@ changelog 19-09-022:
                 1 - run knex migrate:rollback
                 2- run knex migrate:latest 
         2 - roomCheck.js // just change the time type from date to epoch(seconds)
+
+changlog 20-09-2022:
+    frontend:   
+        1 -  comment out new window toolkit  from 509-537    // components/containers/peer.js
+        2 -  comment out from 192-206  // components/Room.js
